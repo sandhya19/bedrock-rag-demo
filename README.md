@@ -12,16 +12,15 @@ The demo scrapes the Amazon Bedrock FAQ page, converts each FAQ into structured 
 
 This showcases a production style ingestion and retrieval pipeline.
 
-Architecture
+# Architecture
 
-Ingestion Layer
+# Ingestion Layer
 Scrape FAQ → Chunk Q and A → Generate Embeddings → Store in pgvector
 
-Retrieval Layer
+# Retrieval Layer
 User Query → Generate Query Embedding → Vector Similarity Search → Return Top Matches
 
-Tech Stack
-
+# Tech Stack
 • Python
 • Amazon Bedrock
 • PostgreSQL with pgvector
@@ -29,49 +28,40 @@ Tech Stack
 • BeautifulSoup
 • psycopg2
 
-Project Structure
-
+# Project Structure
 bedrock-rag-demo/
-
 scraper/
   scrape_bedrock_faq.py
   bedrock_faq.json
-
 ingestion/
   chunk_and_prepare.py
   embed_all_chunks.py
   test_embedding.py
   bedrock_chunks.json
   bedrock_chunks_with_embeddings.json
-
 storage/
   load_into_pgvector.py
-
 retrieval/
   query_service.py
-
 requirements.txt
 README.md
 
-Prerequisites
-
+# Prerequisites
 • Python 3.9+
 • AWS CLI configured
 • Bedrock model access enabled
 • Docker installed
 
-Step 1: Install Dependencies
+**Step 1:** Install Dependencies
 
 pip install -r requirements.txt
-
 requirements.txt should contain:
-
 boto3
 requests
 beautifulsoup4
 psycopg2-binary
 
-Step 2: Scrape Amazon Bedrock FAQ
+**Step 2:** Scrape Amazon Bedrock FAQ
 
 Run:
 
@@ -81,7 +71,7 @@ This creates:
 
 scraper/bedrock_faq.json
 
-Step 3: Prepare Q and A Chunks
+**Step 3:** Prepare Q and A Chunks
 
 Run:
 
@@ -98,7 +88,7 @@ Each chunk contains:
 • answer
 • combined text
 
-Step 4: Generate Embeddings with Bedrock
+**Step 4:** Generate Embeddings with Bedrock
 
 Test embedding access first:
 
@@ -112,7 +102,7 @@ This creates:
 
 ingestion/bedrock_chunks_with_embeddings.json
 
-Step 5: Start PostgreSQL with pgvector
+**Step 5:** Start PostgreSQL with pgvector
 
 Run:
 
@@ -126,7 +116,7 @@ Verify container is running:
 
 docker ps
 
-Step 6: Create Database Table
+**Step 6:** Create Database Table
 
 Connect to container:
 
@@ -147,7 +137,7 @@ Exit with:
 
 \q
 
-Step 7: Load Data into Database
+**Step 7:** Load Data into Database
 
 Run:
 
@@ -157,7 +147,7 @@ You should see:
 
 Data inserted successfully.
 
-Step 8: Run Semantic Search
+**Step 8:** Run Semantic Search
 
 Run:
 
@@ -175,7 +165,7 @@ The system will:
 • Perform vector similarity search
 • Return top matching FAQ entries
 
-How Similarity Search Works
+**How Similarity Search Works**
 
 The query embedding is compared against stored embeddings using pgvector distance operator:
 
@@ -183,7 +173,7 @@ embedding <-> query_vector
 
 The lowest distance values are most similar.
 
-Future Improvements
+**Future Improvements**
 
 • Add hybrid keyword plus semantic search
 • Add reranking layer
