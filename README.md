@@ -165,7 +165,7 @@ The system will:
 • Perform vector similarity search
 • Return top matching FAQ entries
 
-**How Similarity Search Works**
+# How Similarity Search Works
 
 The query embedding is compared against stored embeddings using pgvector distance operator:
 
@@ -173,7 +173,7 @@ embedding <-> query_vector
 
 The lowest distance values are most similar.
 
-**Future Improvements**
+# Future Improvements
 
 • Add hybrid keyword plus semantic search
 • Add reranking layer
