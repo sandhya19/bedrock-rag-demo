@@ -1,187 +1,261 @@
 # bedrock-rag-demo
-Enterprise RAG Demo with Amazon Bedrock and pgvector
-Overview
 
-This project demonstrates an end to end Retrieval Augmented Generation workflow using:
+🚀 **Enterprise RAG Demo with Amazon Bedrock and pgvector**
 
-• Amazon Bedrock for embeddings
-• PostgreSQL with pgvector for vector storage
-• Semantic similarity search for retrieval
+An end-to-end solution for building Retrieval-Augmented Generation (RAG) workflows. This project demonstrates how to leverage Amazon Bedrock for AI-powered embeddings and PostgreSQL with pgvector for efficient semantic similarity search, enabling high-performance Q&A services.
 
-The demo scrapes the Amazon Bedrock FAQ page, converts each FAQ into structured chunks, generates embeddings, stores them in a vector database, and performs semantic search over the content.
+---
 
-This showcases a production style ingestion and retrieval pipeline.
+## 📋 Table of Contents
 
-# Architecture
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [How It Works](#how-it-works)
+- [Future Improvements](#future-improvements)
+- [License](#license)
 
-# Ingestion Layer
-Scrape FAQ → Chunk Q and A → Generate Embeddings → Store in pgvector
+---
 
-# Retrieval Layer
+## Overview
+
+This project demonstrates an end-to-end Retrieval Augmented Generation (RAG) workflow that:
+
+- 🔍 **Scrapes** the Amazon Bedrock FAQ page
+- 📝 **Chunks** each FAQ into structured Q&A pairs
+- 🧠 **Generates embeddings** using Amazon Bedrock's embedding models
+- 💾 **Stores** embeddings in PostgreSQL with pgvector extension
+- 🔎 **Performs semantic search** to retrieve relevant FAQs based on user queries
+
+This showcases a production-style ingestion and retrieval pipeline suitable for enterprise applications.
+
+---
+
+## Architecture
+
+### Ingestion Pipeline
+```
+FAQ Data → Chunking → Embedding Generation → Vector Storage (pgvector)
+```
+
+### Retrieval Pipeline
+```
 User Query → Generate Query Embedding → Vector Similarity Search → Return Top Matches
+```
 
-# Tech Stack
-• Python
-• Amazon Bedrock
-• PostgreSQL with pgvector
-• Docker
-• BeautifulSoup
-• psycopg2
+---
 
-# Project Structure
+## Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| **Language** | Python 3.9+ |
+| **AI/ML** | Amazon Bedrock |
+| **Database** | PostgreSQL with pgvector |
+| **Web Scraping** | BeautifulSoup |
+| **Database Driver** | psycopg2 |
+| **Containerization** | Docker |
+
+---
+
+## Project Structure
+
+```
 bedrock-rag-demo/
-scraper/
-  scrape_bedrock_faq.py
-  bedrock_faq.json
-ingestion/
-  chunk_and_prepare.py
-  embed_all_chunks.py
-  test_embedding.py
-  bedrock_chunks.json
-  bedrock_chunks_with_embeddings.json
-storage/
-  load_into_pgvector.py
-retrieval/
-  query_service.py
-requirements.txt
-README.md
+├── scraper/
+│   ├── scrape_bedrock_faq.py       # Scrapes Bedrock FAQ page
+│   └── bedrock_faq.json             # Raw FAQ data
+├── ingestion/
+│   ├── chunk_and_prepare.py         # Chunks FAQs into Q&A pairs
+│   ├── embed_all_chunks.py          # Generates embeddings via Bedrock
+│   ├── test_embedding.py            # Tests embedding access
+│   ├── bedrock_chunks.json          # Chunked FAQ data
+│   └── bedrock_chunks_with_embeddings.json  # Chunks with embeddings
+├── storage/
+│   └── load_into_pgvector.py        # Loads data into PostgreSQL
+├── retrieval/
+│   └── query_service.py             # Semantic search query service
+├── requirements.txt                 # Python dependencies
+└── README.md                        # This file
+```
 
-# Prerequisites
-• Python 3.9+
-• AWS CLI configured
-• Bedrock model access enabled
-• Docker installed
+---
 
-**Step 1:** Install Dependencies
+## Prerequisites
 
+Before you begin, ensure you have the following installed and configured:
+
+- **Python 3.9 or higher** - [Install Python](https://www.python.org/downloads/)
+- **AWS CLI** - [Configure AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- **Bedrock model access** - Enable access to embedding models in your AWS account
+- **Docker** - [Install Docker](https://docs.docker.com/get-docker/)
+
+---
+
+## Quick Start
+
+### Step 1: Install Dependencies
+
+```bash
 pip install -r requirements.txt
-requirements.txt should contain:
+```
+
+**requirements.txt contains:**
+```
 boto3
 requests
 beautifulsoup4
 psycopg2-binary
+```
 
-**Step 2:** Scrape Amazon Bedrock FAQ
+### Step 2: Scrape Amazon Bedrock FAQ
 
-Run:
-
+```bash
 python scraper/scrape_bedrock_faq.py
+```
 
-This creates:
+**Output:** `scraper/bedrock_faq.json`
 
-scraper/bedrock_faq.json
+### Step 3: Prepare Q&A Chunks
 
-**Step 3:** Prepare Q and A Chunks
-
-Run:
-
+```bash
 python ingestion/chunk_and_prepare.py
+```
 
-This creates:
-
-ingestion/bedrock_chunks.json
+**Output:** `ingestion/bedrock_chunks.json`
 
 Each chunk contains:
+- `id` - Unique identifier
+- `question` - FAQ question
+- `answer` - FAQ answer
+- `combined_text` - Concatenated question and answer
 
-• id
-• question
-• answer
-• combined text
+### Step 4: Generate Embeddings with Bedrock
 
-**Step 4:** Generate Embeddings with Bedrock
+First, test your embedding access:
 
-Test embedding access first:
-
+```bash
 python ingestion/test_embedding.py
+```
 
-Then generate embeddings for all chunks:
+Then, generate embeddings for all chunks:
 
+```bash
 python ingestion/embed_all_chunks.py
+```
 
-This creates:
+**Output:** `ingestion/bedrock_chunks_with_embeddings.json`
 
-ingestion/bedrock_chunks_with_embeddings.json
+### Step 5: Start PostgreSQL with pgvector
 
-**Step 5:** Start PostgreSQL with pgvector
+```bash
+docker run -d \
+  --name pgvector-demo \
+  -e POSTGRES_PASSWORD=postgres \
+  -p 5432:5432 \
+  ankane/pgvector
+```
 
-Run:
+Verify the container is running:
 
-docker run -d
---name pgvector-demo
--e POSTGRES_PASSWORD=postgres
--p 5432:5432
-ankane/pgvector
-
-Verify container is running:
-
+```bash
 docker ps
+```
 
-**Step 6:** Create Database Table
+### Step 6: Create Database Table
 
-Connect to container:
+Connect to the PostgreSQL container:
 
+```bash
 docker exec -it pgvector-demo psql -U postgres
+```
 
-Inside PostgreSQL:
+Inside PostgreSQL, create the vector extension and table:
 
+```sql
 CREATE EXTENSION IF NOT EXISTS vector;
 
 CREATE TABLE bedrock_faq (
-id TEXT PRIMARY KEY,
-question TEXT,
-answer TEXT,
-embedding VECTOR(1536)
+  id TEXT PRIMARY KEY,
+  question TEXT,
+  answer TEXT,
+  embedding VECTOR(1536)
 );
+```
 
-Exit with:
+Exit with `\q`
 
-\q
+### Step 7: Load Data into Database
 
-**Step 7:** Load Data into Database
-
-Run:
-
+```bash
 python storage/load_into_pgvector.py
+```
 
-You should see:
-
+**Expected output:**
+```
 Data inserted successfully.
+```
 
-**Step 8:** Run Semantic Search
+### Step 8: Run Semantic Search
 
-Run:
-
+```bash
 python retrieval/query_service.py
+```
 
-Enter a question such as:
-
-What is Amazon Bedrock?
-How much does Amazon Bedrock cost?
-Which models are supported?
+Try asking questions like:
+- "What is Amazon Bedrock?"
+- "How much does Amazon Bedrock cost?"
+- "Which models are supported?"
 
 The system will:
+- 🔄 Generate an embedding for your query
+- 🔍 Perform vector similarity search
+- 📊 Return the top matching FAQ entries
 
-• Generate query embedding
-• Perform vector similarity search
-• Return top matching FAQ entries
+---
 
-# How Similarity Search Works
+## How It Works
 
-The query embedding is compared against stored embeddings using pgvector distance operator:
+### Similarity Search Mechanism
 
+The query embedding is compared against stored embeddings using the pgvector distance operator:
+
+```sql
 embedding <-> query_vector
+```
 
-The lowest distance values are most similar.
+**Lower distance values indicate higher similarity.** The system returns the FAQs with the smallest distances to your query, meaning they are semantically most similar.
 
-# Future Improvements
+### Example Workflow
 
-• Add hybrid keyword plus semantic search
-• Add reranking layer
-• Add LLM answer generation
-• Add FastAPI API endpoint
-• Add evaluation metrics and logging
-• Add metadata filtering
+1. User asks: "What can I use Bedrock for?"
+2. System generates an embedding for this query
+3. pgvector compares it against all stored FAQ embeddings
+4. Returns the top-matched FAQ answers based on semantic similarity
+5. User receives relevant information from the knowledge base
 
-What This Demonstrates
+---
 
-• End to end RAG ingestion pipeline
+## Future Improvements
+
+- [ ] **Hybrid Search** - Combine keyword search with semantic search
+- [ ] **Reranking Layer** - Improve result relevance with cross-encoders
+- [ ] **LLM Answer Generation** - Generate answers instead of returning raw FAQs
+- [ ] **FastAPI Endpoint** - Expose functionality via REST API
+- [ ] **Evaluation Metrics** - Add metrics and logging for performance monitoring
+- [ ] **Metadata Filtering** - Filter results by metadata fields
+- [ ] **Caching Layer** - Cache frequent queries for faster responses
+- [ ] **Multi-language Support** - Support queries in multiple languages
+
+---
+
+## License
+
+This project is provided as-is for educational and demonstration purposes.
+
+---
+
+**Happy exploring! 🎉** For questions or issues, feel free to open an issue in the repository.
