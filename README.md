@@ -15,6 +15,8 @@ An end-to-end solution for building Retrieval-Augmented Generation (RAG) workflo
 - [Prerequisites](#prerequisites)
 - [Quick Start](#quick-start)
 - [How It Works](#how-it-works)
+- [Implemented Features](#implemented-features)
+- [What This Project Demonstrates](#what-this-project-demonstrates)
 - [Future Improvements](#future-improvements)
 - [License](#license)
 
@@ -30,7 +32,7 @@ This project demonstrates an end-to-end Retrieval Augmented Generation (RAG) wor
 - 💾 **Stores** embeddings in PostgreSQL with pgvector extension
 - 🔎 **Performs semantic search** to retrieve relevant FAQs based on user queries
 
-This showcases a production-style ingestion and retrieval pipeline suitable for enterprise applications.
+This project focuses on retrieval architecture design and ranking calibration rather than only LLM integration. This showcases a production-style ingestion and retrieval pipeline suitable for enterprise applications.
 
 ---
 
@@ -43,7 +45,7 @@ FAQ Data → Chunking → Embedding Generation → Vector Storage (pgvector)
 
 ### Retrieval Pipeline
 ```
-User Query → Generate Query Embedding → Vector Similarity Search → Return Top Matches
+User Query → Generate Query Embedding → Semantic Search (pgvector) → Keyword Search (PostgreSQL Full Text) → Score Normalization and Exact Match Boosting → Hybrid Ranking → Return Top Matches
 ```
 
 ---
@@ -53,7 +55,7 @@ User Query → Generate Query Embedding → Vector Similarity Search → Return 
 | Category | Technology |
 |----------|------------|
 | **Language** | Python 3.9+ |
-| **AI/ML** | Amazon Bedrock |
+| **AI/ML** | Amazon Bedrock(Embeddings) |
 | **Database** | PostgreSQL with pgvector |
 | **Web Scraping** | BeautifulSoup |
 | **Database Driver** | psycopg2 |
@@ -219,6 +221,16 @@ The system will:
 
 ## How It Works
 
+### Retrieval Strategy
+
+This system combines multiple ranking signals:
+
+1. Semantic similarity using Amazon Bedrock embeddings
+2. Keyword relevance using PostgreSQL full text search
+3. Weighted ranking prioritizing question fields
+4. Exact match boosting for deterministic ranking
+5. Scores from semantic and lexical retrieval are normalized and combined using weighted ranking to improve result stability and precision.
+
 ### Similarity Search Mechanism
 
 The query embedding is compared against stored embeddings using the pgvector distance operator:
@@ -238,14 +250,25 @@ embedding <-> query_vector
 5. User receives relevant information from the knowledge base
 
 ---
-### Implemented Features
 
-1. Semantic search using Amazon Bedrock embeddings
-2. Vector similarity search with pgvector
-3. Keyword search using PostgreSQL full text search
-4. Weighted field ranking for question and answer
-5. Hybrid retrieval combining semantic and lexical signals
-6. Exact match boosting and score normalization
+## Implemented Features
+
+- Semantic search using Amazon Bedrock embeddings
+- Vector similarity search with pgvector
+- Keyword search using PostgreSQL full text search
+- Weighted field ranking for question and answer
+- Hybrid retrieval combining semantic and lexical signals
+- Exact match boosting and score normalization
+
+---
+
+## What This Project Demonstrates
+
+- End-to-end embedding pipeline design
+- Vector database integration using pgvector
+- Hybrid search architecture combining semantic and lexical retrieval
+- Ranking calibration and score normalization
+- Practical retrieval system tuning beyond basic RAG
 
 ---
 
