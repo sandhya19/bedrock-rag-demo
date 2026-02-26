@@ -238,10 +238,19 @@ embedding <-> query_vector
 5. User receives relevant information from the knowledge base
 
 ---
+### Implemented Features
+
+1. Semantic search using Amazon Bedrock embeddings
+2. Vector similarity search with pgvector
+3. Keyword search using PostgreSQL full text search
+4. Weighted field ranking for question and answer
+5. Hybrid retrieval combining semantic and lexical signals
+6. Exact match boosting and score normalization
+
+---
 
 ## Future Improvements
 
-- [ ] **Hybrid Search** - Combine keyword search with semantic search
 - [ ] **Reranking Layer** - Improve result relevance with cross-encoders
 - [ ] **LLM Answer Generation** - Generate answers instead of returning raw FAQs
 - [ ] **FastAPI Endpoint** - Expose functionality via REST API
