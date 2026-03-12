@@ -262,6 +262,23 @@ embedding <-> query_vector
 
 ---
 
+## Retrieval Evaluation & Calibration
+
+To validate ranking quality, a lightweight evaluation framework was added:
+
+- Precision@1 measurement
+- Precision@3 measurement
+- Average latency tracking
+- Misranking diagnostics
+
+This allowed iterative tuning of hybrid ranking weights and heuristic boosts.
+
+Through calibration, Precision@1 improved from ~0.6–0.7 to ~0.9 on structured test queries.
+
+This demonstrates how retrieval quality depends not only on embeddings, but also on ranking design and query structure.
+
+---
+
 ## What This Project Demonstrates
 
 - End-to-end embedding pipeline design
@@ -277,10 +294,12 @@ embedding <-> query_vector
 - [ ] **Reranking Layer** - Improve result relevance with cross-encoders
 - [ ] **LLM Answer Generation** - Generate answers instead of returning raw FAQs
 - [ ] **FastAPI Endpoint** - Expose functionality via REST API
-- [ ] **Evaluation Metrics** - Add metrics and logging for performance monitoring
+- [x] **Basic Retrieval Evaluation** - Precision@1, Precision@3, latency tracking
+- [ ] **Advanced Evaluation & Logging** - Add structured metrics and ranking diagnostics
 - [ ] **Metadata Filtering** - Filter results by metadata fields
 - [ ] **Caching Layer** - Cache frequent queries for faster responses
 - [ ] **Multi-language Support** - Support queries in multiple languages
+- [ ] **Query Rewriting Layer** - Improve retrieval robustness for short or ambiguous queries
 
 ---
 

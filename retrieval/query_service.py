@@ -37,7 +37,7 @@ def keyword_search(query_text, top_k=10):
     cur.execute(
         """
         SELECT id, question, answer,
-               ts_rank(search_vector, plainto_tsquery(%s)) AS rank
+               ts_rank(search_vector,  websearch_to_tsquery('english', %s)) AS rank
         FROM bedrock_faq
         ORDER BY rank DESC
         LIMIT %s;
@@ -78,7 +78,6 @@ def semantic_search(query_embedding, top_k=10):
 
 def hybrid_search(query_text, top_k=3):
     query_embedding = generate_embedding(query_text)
-
     semantic_results = semantic_search(query_embedding, top_k=10)
     keyword_results = keyword_search(query_text, top_k=10)
 
@@ -90,6 +89,7 @@ def hybrid_search(query_text, top_k=3):
         semantic_score = 1 / (1 + distance)
 
         combined[id_] = {
+            "id": id_,
             "question": question,
             "answer": answer,
             "semantic_score": semantic_score,
@@ -109,6 +109,7 @@ def hybrid_search(query_text, top_k=3):
 
         if id_ not in combined:
             combined[id_] = {
+                "id": id_,
                 "question": question,
                 "answer": answer,
                 "semantic_score": 0,
@@ -124,15 +125,31 @@ def hybrid_search(query_text, top_k=3):
     for item in combined.values():
         question_normalized = item["question"].lower().strip().rstrip('?')
 
+        # Exact match boost
         if question_normalized == normalized_query:
             exact_boost = 1
         else:
             exact_boost = 0
+        
+        # Substring boost
+        if normalized_query in question_normalized:
+            substring_boost = 0.3
+        else:
+            substring_boost = 0
+        
+        # Token containment boost (Stronger for short queries)
+        query_tokens = normalized_query.split()
+        if all(token in question_normalized.split() for token in query_tokens):
+            token_boost = 0.2
+        else:
+            token_boost = 0
 
         item["final_score"] = (
-            0.6 * item["semantic_score"] +
-            0.3 * item["keyword_score"] +
-            0.5 * exact_boost
+            0.75 * item["semantic_score"] +
+            0.2 * item["keyword_score"] +
+            0.5 * exact_boost + 
+            substring_boost + 
+            token_boost
         )
 
     # Sort by final score

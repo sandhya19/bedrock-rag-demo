@@ -1,0 +1,42 @@
+  [
+  {
+    "query": "What is Amazon Bedrock?",
+    "expected_id": "4ebdc755-8aee-4cac-a222-79875fb3ae24"
+  },
+  {
+    "query": "FMs available in Amazon Bedrock?",
+    "expected_id": "4ed53785-e356-45a4-893f-1773004639a2"
+  },
+  {
+    "query": "Why should I use Amazon Bedrock?",
+    "expected_id": "bb683c33-5049-4a93-aa63-c5a9969da523"
+  },
+  {
+    "query": "Get started with Amazon Bedrock?",
+    "expected_id": "e1213bc6-b5e2-47e2-9960-665d2a1c2bb5"
+  },
+  {
+    "query": "most common use cases for Amazon Bedrock?",
+    "expected_id": "0201e831-6673-4b9f-a7ce-e33bed9b264a"
+  },
+  {
+    "query": "Amazon Bedrock Agents?",
+    "expected_id": "7af95dda-6714-4433-b450-8716bf23ec26"
+  },
+  {
+    "query": "latency-optimized inference in Amazon Bedrock?",
+    "expected_id": "2edc2652-0e1e-456b-8bbc-db14752e6683"
+  },
+  {
+    "query": "security and compliance standards Amazon Bedrock support?",
+    "expected_id": "e7c3cd0b-3d67-447a-9016-7ec22485f591"
+  },
+  {
+    "query": "key capabilities AgentCore provide?",
+    "expected_id": "70a1ca89-d16c-47ca-8c8e-6144b9d7588c"
+  },
+  {
+    "query": "What does Amazon Bedrock cost?",
+    "expected_id": "14a10442-2cb6-4976-8fef-0642dab8a325"
+  }
+]
