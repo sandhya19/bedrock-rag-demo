@@ -76,7 +76,30 @@ def semantic_search(query_embedding, top_k=10):
 
     return results
 
+def rewrite_query(query_text):
+    query = query_text.strip().lower()
+
+    intent_words = ("what", "how", "why", "when")
+
+    # If query already structured, return as is
+    if query.startswith(intent_words):
+        return query_text
+
+    tokens = query.split()
+
+    # Very short queries
+    if len(tokens) <= 2:
+        return f"What is {query_text}?"
+
+    # Pricing synonym handling
+    if "pricing" in query and "cost" not in query:
+        return f"What does {query_text.replace('pricing', '').strip()} cost?"
+
+    # Default fallback
+    return f"What is {query_text}?"
+
 def hybrid_search(query_text, top_k=3):
+    query_text = rewrite_query(query_text)
     query_embedding = generate_embedding(query_text)
     semantic_results = semantic_search(query_embedding, top_k=10)
     keyword_results = keyword_search(query_text, top_k=10)

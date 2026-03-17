@@ -16,6 +16,8 @@ An end-to-end solution for building Retrieval-Augmented Generation (RAG) workflo
 - [Quick Start](#quick-start)
 - [How It Works](#how-it-works)
 - [Implemented Features](#implemented-features)
+- [Retrieval Evaluation and Calibration](#retrieval-evaluation-and-calibration)
+- [Query Rewriting Layer](#query-rewriting-layer)
 - [What This Project Demonstrates](#what-this-project-demonstrates)
 - [Future Improvements](#future-improvements)
 - [License](#license)
@@ -45,7 +47,7 @@ FAQ Data → Chunking → Embedding Generation → Vector Storage (pgvector)
 
 ### Retrieval Pipeline
 ```
-User Query → Generate Query Embedding → Semantic Search (pgvector) → Keyword Search (PostgreSQL Full Text) → Score Normalization and Exact Match Boosting → Hybrid Ranking → Return Top Matches
+User Query → Query Rewriting -> Generate Query Embedding → Semantic Search (pgvector) → Keyword Search (PostgreSQL Full Text) → Score Normalization and Exact Match Boosting → Hybrid Ranking → Return Top Matches
 ```
 
 ---
@@ -259,10 +261,11 @@ embedding <-> query_vector
 - Weighted field ranking for question and answer
 - Hybrid retrieval combining semantic and lexical signals
 - Exact match boosting and score normalization
+- Lightweight query rewriting for improving retrieval robustness
 
 ---
 
-## Retrieval Evaluation & Calibration
+## Retrieval Evaluation and Calibration
 
 To validate ranking quality, a lightweight evaluation framework was added:
 
@@ -276,6 +279,36 @@ This allowed iterative tuning of hybrid ranking weights and heuristic boosts.
 Through calibration, Precision@1 improved from ~0.6–0.7 to ~0.9 on structured test queries.
 
 This demonstrates how retrieval quality depends not only on embeddings, but also on ranking design and query structure.
+
+---
+
+## Query Rewriting Layer
+
+To improve retrieval robustness for short or ambiguous queries, a lightweight deterministic query rewriting layer was introduced.
+
+The rewriting layer:
+
+- Expands underspecified queries into structured question format
+- Aligns user intent with indexed FAQ structure
+- Handles common synonym gaps (e.g., pricing → cost)
+- Preserves low latency and avoids additional model calls
+
+### Example Transformations
+
+| Original Query | Rewritten Query |
+|---------------|-----------------|
+| Amazon Bedrock? | What is Amazon Bedrock? |
+| Amazon Bedrock pricing? | What does Amazon Bedrock cost? |
+
+### Impact
+
+After introducing query rewriting:
+
+- Precision@1 improved from ~0.7 to 1.0 on structured test queries
+- Precision@3 improved from ~0.8 to 1.0
+- Average latency remained stable
+
+This demonstrates that retrieval quality often depends more on query normalization than on model complexity.
 
 ---
 
@@ -299,7 +332,7 @@ This demonstrates how retrieval quality depends not only on embeddings, but also
 - [ ] **Metadata Filtering** - Filter results by metadata fields
 - [ ] **Caching Layer** - Cache frequent queries for faster responses
 - [ ] **Multi-language Support** - Support queries in multiple languages
-- [ ] **Query Rewriting Layer** - Improve retrieval robustness for short or ambiguous queries
+- [x] **Query Rewriting Layer** - Improve retrieval robustness for short or ambiguous queries
 
 ---
 

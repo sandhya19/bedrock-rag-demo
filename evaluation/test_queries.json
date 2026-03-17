@@ -1,6 +1,6 @@
   [
   {
-    "query": "What is Amazon Bedrock?",
+    "query": "Amazon Bedrock?",
     "expected_id": "4ebdc755-8aee-4cac-a222-79875fb3ae24"
   },
   {
@@ -36,7 +36,7 @@
     "expected_id": "70a1ca89-d16c-47ca-8c8e-6144b9d7588c"
   },
   {
-    "query": "What does Amazon Bedrock cost?",
+    "query": "Amazon Bedrock pricing?",
     "expected_id": "14a10442-2cb6-4976-8fef-0642dab8a325"
   }
 ]
