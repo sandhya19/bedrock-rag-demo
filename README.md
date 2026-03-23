@@ -1,6 +1,6 @@
 # bedrock-rag-demo
 
-🚀 **Enterprise RAG Demo with Amazon Bedrock and pgvector**
+🚀 **End-to-End RAG System with Hybrid Retrieval, Evaluation, Query Rewriting, and LLM Answer Generation**
 
 An end-to-end solution for building Retrieval-Augmented Generation (RAG) workflows. This project demonstrates how to leverage Amazon Bedrock for AI-powered embeddings and PostgreSQL with pgvector for efficient semantic similarity search, enabling high-performance Q&A services.
 
@@ -26,7 +26,7 @@ An end-to-end solution for building Retrieval-Augmented Generation (RAG) workflo
 
 ## Overview
 
-This project demonstrates an end-to-end Retrieval Augmented Generation (RAG) workflow that:
+Demonstrates a full Retrieval-Augmented Generation (RAG) workflow including hybrid retrieval, evaluation, query rewriting, and grounded LLM answer generation.
 
 - 🔍 **Scrapes** the Amazon Bedrock FAQ page
 - 📝 **Chunks** each FAQ into structured Q&A pairs
@@ -47,7 +47,12 @@ FAQ Data → Chunking → Embedding Generation → Vector Storage (pgvector)
 
 ### Retrieval Pipeline
 ```
-User Query → Query Rewriting -> Generate Query Embedding → Semantic Search (pgvector) → Keyword Search (PostgreSQL Full Text) → Score Normalization and Exact Match Boosting → Hybrid Ranking → Return Top Matches
+User Query 
+→ Query Rewriting 
+→ Hybrid Retrieval (Sematic + Keyword) 
+→ Context Construction
+→ LLM Generation (Amazon BedRock)
+→ Final Answer
 ```
 
 ---
@@ -219,6 +224,12 @@ The system will:
 - 🔍 Perform vector similarity search
 - 📊 Return the top matching FAQ entries
 
+### Run Full RAG Pipeline
+
+```bash
+python app.py
+```
+
 ---
 
 ## How It Works
@@ -262,6 +273,7 @@ embedding <-> query_vector
 - Hybrid retrieval combining semantic and lexical signals
 - Exact match boosting and score normalization
 - Lightweight query rewriting for improving retrieval robustness
+- Grounded LLM answer generation using Amazon Bedrock
 
 ---
 
@@ -292,6 +304,21 @@ The rewriting layer:
 - Aligns user intent with indexed FAQ structure
 - Handles common synonym gaps (e.g., pricing → cost)
 - Preserves low latency and avoids additional model calls
+
+## LLM Answer Generation
+
+The system now includes a full Retrieval-Augmented Generation (RAG) pipeline.
+
+After hybrid retrieval, the top ranked chunks are:
+
+- Structured into contextual sources
+- Injected into a grounded prompt
+- Passed to an Amazon Bedrock foundation model
+- Used to generate a final synthesized answer
+
+The model is instructed to use only retrieved context and avoid hallucination.
+
+This completes the end-to-end RAG workflow.
 
 ### Example Transformations
 
