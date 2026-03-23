@@ -6,9 +6,9 @@ def main():
 
     retrieved = hybrid_search(query, top_k=3)
 
-    print("\nTop Retrieved Chunks:")
-    for r in retrieved:
-        print("-", r["question"])
+    # print("\nTop Retrieved Chunks:")
+    # for r in retrieved:
+    #     print("-", r["question"])
 
     answer = generate_answer(query, retrieved)
 

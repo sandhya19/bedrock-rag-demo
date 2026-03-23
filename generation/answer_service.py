@@ -26,7 +26,16 @@ def call_bedrock_llm(prompt):
 
 def build_prompt(query, context):
     return f"""
-You are a helpful assistant. Use ONLY the information provided below to answer the user's question.
+You are a knowledgeable assistant.
+
+Using ONLY the information provided in the context below, write a clear, concise, and natural answer to the user's question.
+
+Do NOT mention "Source" numbers inside the answer.
+Do NOT say "According to the context".
+Do NOT copy the FAQ wording verbatim.
+
+Synthesize the information into a helpful explanation.
+
 
 If the answer is not present in the provided context, say:
 "I do not have enough information in the knowledge base to answer this question."

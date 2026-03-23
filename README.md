@@ -51,7 +51,7 @@ User Query
 → Query Rewriting 
 → Hybrid Retrieval (Sematic + Keyword) 
 → Context Construction
-→ LLM Generation (Amazon BedRock)
+→ LLM Generation (Amazon Bedrock)
 → Final Answer
 ```
 
